@@ -56,9 +56,12 @@ export const ResourceContextProvider = ({
 		setLoadingResources(true)
 
 		try {
-			const response = await axios.get('/api/collection', {
-				params: { next_cursor: cursor || undefined },
-			})
+			const response = await axios.get(
+				`${process.env.NEXT_PUBLIC_URL}/api/collection`,
+				{
+					params: { next_cursor: cursor || undefined },
+				}
+			)
 
 			const { resources: newResources, next_cursor } = response.data
 
@@ -93,7 +96,10 @@ export const ResourceContextProvider = ({
 		try {
 			setLoadingResult(true)
 			setResource(resourceData as CloudinaryUploadWidgetInfo)
-			const result = await axios.post('/api/upload', { resource: resourceData })
+			const result = await axios.post(
+				`${process.env.NEXT_PUBLIC_URL}/api/upload`,
+				{ resource: resourceData }
+			)
 			setFinalResult(result.data.imageResult)
 			setResources((prevResources) => [
 				...(prevResources || []),
