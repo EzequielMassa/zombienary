@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
 	} catch (error) {
 		return NextResponse.json(
 			{
-				error: error.message,
+				error: 'Error al cargar los recursos',
 			},
 			{
 				status: 400,
