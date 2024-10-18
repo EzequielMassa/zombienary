@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
 	}
 }
 
-async function applyZombieFilter(publicId: string) {
-	return new Promise((resolve) => {
+async function applyZombieFilter(publicId: string): Promise<string> {
+	return new Promise<string>((resolve) => {
 		const result = cloudinary.image(publicId, {
 			transformation: [
 				{ effect: 'gen_replace:from_face;to_zombie_mask' },
@@ -50,6 +50,6 @@ async function applyZombieFilter(publicId: string) {
 				{ effect: 'gen_background_replace:prompt_an apocalypt scene' },
 			],
 		})
-		resolve(result)
+		resolve(result as string)
 	})
 }
