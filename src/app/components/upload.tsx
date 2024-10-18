@@ -1,52 +1,46 @@
 'use client'
 
-import axios from 'axios'
-import { CldUploadWidget, CloudinaryUploadWidgetInfo } from 'next-cloudinary'
-import { useEffect, useState } from 'react'
+import { useResourceContext } from '@/app/context/ResourceContext'
+import { Button } from '@/components/ui/button'
+import { Loader2 } from 'lucide-react'
+import { CldUploadWidget } from 'next-cloudinary'
 
-function UploadWidget() {
-	const [resource, setResource] = useState<
-		string | CloudinaryUploadWidgetInfo | undefined
-	>()
-	const [finalResult, setFinalResult] = useState<
-		string | CloudinaryUploadWidgetInfo | undefined
-	>()
-	const [loading, setLoading] = useState<boolean>(false)
-
-	useEffect(() => {
-		const uploadResource = async () => {
-			if (resource) {
-				try {
-					setLoading(true)
-					const result = await axios.post('/api/upload', { resource })
-					setFinalResult(result.data.imageResult)
-				} catch (error) {
-					console.error('Error uploading resource:', error)
-				} finally {
-					setLoading(false)
-				}
-			}
-		}
-		uploadResource()
-	}, [resource])
-
-	useEffect(() => {
-		console.log(finalResult)
-	}, [finalResult])
-
-	if (loading) {
-		return <div>Loading...</div>
-	}
+function UploadWidget({ text }: { text: string }) {
+	const { loadingResult, uploadResource, setFinalResult } = useResourceContext()
 
 	return (
 		<CldUploadWidget
-			uploadPreset='unsigned_images'
-			options={{ maxFiles: 1, sources: ['local'] }}
+			uploadPreset='unsigned_zombienary'
+			options={{
+				maxFiles: 1,
+				sources: ['local'],
+				folder: 'zombienary',
+			}}
 			onSuccess={(result) => {
-				setResource(result?.info)
+				setFinalResult(undefined)
+				uploadResource(result.info!)
 			}}>
 			{({ open }) => {
-				return <button onClick={() => open()}>Upload an Image</button>
+				return (
+					<Button
+						onClick={() => open()}
+						disabled={loadingResult}
+						className='bg-green-700 text-xl py-4 inline-flex gap-x-2 justify-center items-center'
+						size={'lg'}>
+						{loadingResult ? (
+							<Loader2 className='animate-spin' />
+						) : (
+							<div className='flex gap-x-2 items-center'>
+								{text}
+								<img
+									src='/zombie-svgrepo-com.svg'
+									alt='join button image'
+									className='w-10 text-white'
+								/>
+							</div>
+						)}
+					</Button>
+				)
 			}}
 		</CldUploadWidget>
 	)

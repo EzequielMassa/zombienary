@@ -11,37 +11,43 @@ cloudinary.config({
 export async function POST(request: NextRequest) {
 	const { resource } = await request.json()
 
-	const edit1Url = await applyFilter(resource.public_id, 'face', 'zombie mask')
+	try {
+		const imageUrl = await applyZombieFilter(resource.public_id)
+		const urlMatch = imageUrl.match(/src=['"]([^'"]+)['"]/)
+		const result = urlMatch ? urlMatch[1] : null
 
-	const upload1 = await cloudinary.uploader.upload(edit1Url as string, {
-		folder: 'zombienary',
-	})
+		const upload = await cloudinary.uploader.unsigned_upload(
+			result as string,
+			'unsigned_zombienary',
+			{
+				folder: 'zombienary/edits',
+				timeout: 60000,
+			}
+		)
 
-	const edit2Url = await applyFilter(
-		upload1.public_id,
-		'clothes',
-		'zombie costume'
-	)
-
-	const upload2 = await cloudinary.uploader.upload(edit2Url as string, {
-		folder: 'zombienary/edits',
-	})
-
-	return NextResponse.json({
-		message: 'Imagen subida y transformada correctamente',
-		imageResult: upload2,
-	})
+		return NextResponse.json({
+			message: 'Imagen subida y transformada correctamente',
+			imageResult: upload,
+		})
+	} catch (error) {
+		return NextResponse.json(
+			{
+				error: 'Error al subir la imagen',
+			},
+			{
+				status: 400,
+			}
+		)
+	}
 }
 
-async function applyFilter(
-	publicId: string,
-	fromEffect: string,
-	toEffect: string
-) {
+async function applyZombieFilter(publicId: string) {
 	return new Promise((resolve) => {
-		const result = cloudinary.url(publicId, {
+		const result = cloudinary.image(publicId, {
 			transformation: [
-				{ effect: `gen_replace:from_${fromEffect};to_${toEffect}` },
+				{ effect: 'gen_replace:from_face;to_zombie_mask' },
+				{ effect: 'gen_replace:from_clothes;to_zombie_clothes_with_blood' },
+				{ effect: 'gen_background_replace:prompt_an apocalypt scene' },
 			],
 		})
 		resolve(result)
