@@ -17,8 +17,8 @@ function CarouselCards() {
 	const { resources, loadingResources }: CarouselCardProps =
 		useResourceContext()
 
-	let firstRow = resources?.slice(0, resources.length / 2)
-	let secondRow = resources?.slice(resources.length / 2)
+	const firstRow = resources?.slice(0, resources.length / 2)
+	const secondRow = resources?.slice(resources.length / 2)
 
 	useEffect(() => {}, [resources])
 
