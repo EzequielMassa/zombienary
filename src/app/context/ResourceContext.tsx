@@ -15,14 +15,12 @@ interface ResourceContextType {
 		React.SetStateAction<string | CloudinaryUploadWidgetInfo | undefined>
 	>
 	loadingResources: boolean
-	setLoadingResources: React.Dispatch<React.SetStateAction<boolean>>
 	setTotalResources: React.Dispatch<React.SetStateAction<number | undefined>>
 	loadResources: (cursor?: string | null) => Promise<void>
 	setFinalResult: React.Dispatch<
 		React.SetStateAction<string | CloudinaryUploadWidgetInfo | undefined>
 	>
 	setLoadingResult: React.Dispatch<React.SetStateAction<boolean>>
-	loading: boolean
 	totalResources: number | undefined
 	finalResult: string | CloudinaryUploadWidgetInfo | undefined
 	loadingResult: boolean
@@ -68,9 +66,10 @@ export const ResourceContextProvider = ({
 
 			setResources((prevResources) => {
 				const filteredNewResources = newResources.filter(
-					(newResource) =>
+					(newResource: any) =>
 						!prevResources?.some(
-							(prevResource) => prevResource.asset_id === newResource.asset_id
+							(prevResource: any) =>
+								prevResource.asset_id === newResource.asset_id
 						)
 				)
 				return [...(prevResources || []), ...filteredNewResources]

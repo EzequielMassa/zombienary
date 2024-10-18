@@ -29,7 +29,7 @@ function CarouselCards() {
 					? Array(5)
 							.fill(null)
 							.map((_, index) => <ImageSkeleton key={index} />)
-					: firstRow?.map((item) => (
+					: firstRow?.map((item: any) => (
 							<ZombieCard key={`${item.asset_id}`}>
 								<div className='flex justify-center items-center rounded-lg'>
 									<a href={item.url} target='_blank'>
@@ -46,7 +46,7 @@ function CarouselCards() {
 			</Marquee>
 
 			<Marquee reverse pauseOnHover className='[--duration:50s] rounded-lg'>
-				{secondRow?.map((item) => (
+				{secondRow?.map((item: any) => (
 					<ZombieCard key={`${item.asset_id}`}>
 						<div className='flex justify-center items-center rounded-lg'>
 							<a href={item.url} target='_blank'>
