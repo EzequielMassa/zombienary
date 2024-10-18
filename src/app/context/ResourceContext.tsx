@@ -2,27 +2,25 @@
 
 import { useToast } from '@/hooks/use-toast'
 import axios from 'axios'
-import { CloudinaryUploadWidgetInfo } from 'next-cloudinary'
+import type { CloudinaryUploadWidgetInfo } from 'next-cloudinary'
 import { createContext, ReactNode, useContext, useState } from 'react'
 
 interface ResourceContextType {
-	resource: string | CloudinaryUploadWidgetInfo | undefined
-	uploadResource: (
-		resourceData: string | CloudinaryUploadWidgetInfo
-	) => Promise<void>
-	resources: string[] | CloudinaryUploadWidgetInfo[] | undefined
+	resource: CloudinaryUploadWidgetInfo | undefined
+	uploadResource: (resourceData: CloudinaryUploadWidgetInfo) => Promise<void>
+	resources: CloudinaryUploadWidgetInfo[] | undefined
 	setResource: React.Dispatch<
-		React.SetStateAction<string | CloudinaryUploadWidgetInfo | undefined>
+		React.SetStateAction<CloudinaryUploadWidgetInfo | undefined>
 	>
 	loadingResources: boolean
 	setTotalResources: React.Dispatch<React.SetStateAction<number | undefined>>
 	loadResources: (cursor?: string | null) => Promise<void>
 	setFinalResult: React.Dispatch<
-		React.SetStateAction<string | CloudinaryUploadWidgetInfo | undefined>
+		React.SetStateAction<CloudinaryUploadWidgetInfo | undefined>
 	>
 	setLoadingResult: React.Dispatch<React.SetStateAction<boolean>>
 	totalResources: number | undefined
-	finalResult: string | CloudinaryUploadWidgetInfo | undefined
+	finalResult: CloudinaryUploadWidgetInfo | undefined
 	loadingResult: boolean
 	loadMoreResources: () => void
 	hasMore: boolean
@@ -38,15 +36,15 @@ export const ResourceContextProvider = ({
 	children: ReactNode
 }) => {
 	const [resource, setResource] = useState<
-		string | CloudinaryUploadWidgetInfo | undefined
+		CloudinaryUploadWidgetInfo | undefined
 	>()
 	const [resources, setResources] = useState<
-		string[] | CloudinaryUploadWidgetInfo[] | undefined
+		CloudinaryUploadWidgetInfo[] | undefined
 	>()
 	const [loadingResources, setLoadingResources] = useState<boolean>(false)
 	const [totalResources, setTotalResources] = useState<number | undefined>()
 	const [finalResult, setFinalResult] = useState<
-		string | CloudinaryUploadWidgetInfo | undefined
+		CloudinaryUploadWidgetInfo | undefined
 	>()
 
 	const [loadingResult, setLoadingResult] = useState<boolean>(false)
@@ -94,7 +92,7 @@ export const ResourceContextProvider = ({
 	) {
 		try {
 			setLoadingResult(true)
-			setResource(resourceData)
+			setResource(resourceData as CloudinaryUploadWidgetInfo)
 			const result = await axios.post('/api/upload', { resource: resourceData })
 			setFinalResult(result.data.imageResult)
 			setResources((prevResources) => [

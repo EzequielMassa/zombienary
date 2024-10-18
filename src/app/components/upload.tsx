@@ -16,7 +16,7 @@ function UploadWidget({ text }: { text: string }) {
 				sources: ['local'],
 				folder: 'zombienary',
 			}}
-			onSuccess={(result) => {
+			onSuccess={(result: any) => {
 				setFinalResult(undefined)
 				uploadResource(result.info!)
 			}}>
